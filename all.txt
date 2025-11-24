@@ -1,0 +1,324 @@
+import java.util.Scanner;
+
+public class LeakyBucket {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int bucketSize, outputRate, n, incoming;
+        int stored = 0;
+
+        System.out.print("Enter bucket size: ");
+        bucketSize = sc.nextInt();
+
+        System.out.print("Enter output rate: ");
+        outputRate = sc.nextInt();
+
+        System.out.print("Enter number of packets: ");
+        n = sc.nextInt();
+
+        for (int i = 1; i <= n; i++) {
+            System.out.print("Enter incoming packet size: ");
+            incoming = sc.nextInt();
+
+            System.out.println("Incoming packet: " + incoming);
+
+            if (incoming + stored > bucketSize) {
+                System.out.println("Packet loss: " + ((incoming + stored) - bucketSize));
+                stored = bucketSize;
+            } else {
+                stored += incoming;
+            }
+
+            System.out.println("Stored data before sending: " + stored);
+
+            stored -= outputRate;
+            if (stored < 0) stored = 0;
+
+            System.out.println("Stored data after sending: " + stored);
+        }
+
+        sc.close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.Scanner;
+
+public class XOROperation {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int a, b;
+        System.out.print("Enter a: ");
+        a = sc.nextInt();
+
+        System.out.print("Enter b: ");
+        b = sc.nextInt();
+
+        int result = a ^ b;
+
+        System.out.println("XOR = " + result);
+        sc.close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.Scanner;
+
+public class Subnet {
+    static long ipToLong(String ip) {
+        String[] parts = ip.split("\\.");
+        return (Long.parseLong(parts[0]) << 24) |
+               (Long.parseLong(parts[1]) << 16) |
+               (Long.parseLong(parts[2]) << 8) |
+               Long.parseLong(parts[3]);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter IP address: ");
+        String ip = sc.nextLine();
+
+        long ipValue = ipToLong(ip);
+        System.out.println("32–bit integer = " + ipValue);
+
+        sc.close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char domain[50];
+
+    printf("Enter domain name: ");
+    scanf("%s", domain);
+
+    if (strcmp(domain, "google.com") == 0)
+        printf("IP = 142.250.190.78\n");
+    else if (strcmp(domain, "yahoo.com") == 0)
+        printf("IP = 98.137.11.164\n");
+    else
+        printf("Domain not found\n");
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+#define INF 999
+#define N 4
+
+int main() {
+    int cost[N][N] = {
+        {0, 1, 3, 7},
+        {1, 0, 1, INF},
+        {3, 1, 0, 2},
+        {7, INF, 2, 0}
+    };
+
+    int dist[N][N], i, j, k;
+
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            dist[i][j] = cost[i][j];
+
+    for (k = 0; k < N; k++)
+        for (i = 0; i < N; i++)
+            for (j = 0; j < N; j++)
+                if (dist[i][k] + dist[k][j] < dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+
+    printf("Distance Vector Table:\n");
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++)
+            printf("%3d ", dist[i][j]);
+        printf("\n");
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int main() {
+    char host[50];
+    printf("Enter host: ");
+    scanf("%s", host);
+
+    printf("Pinging %s ...\n", host);
+    printf("Reply from %s: bytes=32 time=24ms TTL=52\n", host);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+#define INF 999
+#define N 5
+
+int main() {
+    int graph[N][N] = {
+        {0, 10, 0, 30, 100},
+        {10, 0, 50, 0, 0},
+        {0, 50, 0, 20, 10},
+        {30, 0, 20, 0, 60},
+        {100, 0, 10, 60, 0}
+    };
+
+    int dist[N], visited[N] = {0}, i, j, min, u;
+
+    for (i = 0; i < N; i++) dist[i] = INF;
+    dist[0] = 0;
+
+    for (i = 0; i < N - 1; i++) {
+        min = INF;
+        for (j = 0; j < N; j++)
+            if (!visited[j] && dist[j] < min)
+                min = dist[j], u = j;
+
+        visited[u] = 1;
+
+        for (j = 0; j < N; j++)
+            if (graph[u][j] && dist[u] + graph[u][j] < dist[j])
+                dist[j] = dist[u] + graph[u][j];
+    }
+
+    printf("Shortest paths from node 0:\n");
+    for (i = 0; i < N; i++)
+        printf("0 -> %d = %d\n", i, dist[i]);
+
+    return 0;
+}
