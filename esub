@@ -1,0 +1,60 @@
+import java.util.*;
+
+public class EasySubnetting {
+
+    // Convert 4-part IP to integer
+    static int ipToInt(int a, int b, int c, int d) {
+        return (a << 24) | (b << 16) | (c << 8) | d;
+    }
+
+    // Print integer IP back in dotted format
+    static void printIP(int ip) {
+        System.out.println(((ip >> 24) & 255) + "." +
+                           ((ip >> 16) & 255) + "." +
+                           ((ip >> 8) & 255) + "." +
+                           (ip & 255));
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Input
+        System.out.println("Enter IP (4 numbers): ");
+        int a = sc.nextInt(), b = sc.nextInt(), c = sc.nextInt(), d = sc.nextInt();
+
+        System.out.println("Enter prefix (e.g., 24): ");
+        int prefix = sc.nextInt();
+
+        int ip = ipToInt(a, b, c, d);
+        int newPrefix = prefix + 1;       // divide into 2 subnets
+        int newMask = ~((1 << (32 - newPrefix)) - 1);
+
+        int hosts = (1 << (32 - newPrefix)) - 2;
+        System.out.println("Hosts per Subnet: " + hosts);
+
+        // Generate 2 subnets
+        for (int i = 0; i < 2; i++) {
+            System.out.println("\nSubnet " + (i + 1));
+
+            int network = (ip & (~((1 << (32 - prefix)) - 1))) | (i << (32 - newPrefix));
+            int broadcast = network | ~newMask;
+
+            System.out.print("Network Address : ");
+            printIP(network);
+
+            System.out.print("Broadcast Addr  : ");
+            printIP(broadcast);
+
+            System.out.print("Subnet Mask     : ");
+            printIP(newMask);
+
+            System.out.print("First Host      : ");
+            printIP(network + 1);
+
+            System.out.print("Last Host       : ");
+            printIP(broadcast - 1);
+        }
+
+        sc.close();
+    }
+}
